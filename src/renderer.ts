@@ -31,3 +31,10 @@ import './index.css';
 console.log(
   '👋 This message is being logged by "renderer.ts", included via Vite',
 );
+
+const fetchApps = async () => {
+  const apps = await window.discordAPI.getDetectableApplications();
+  console.log(apps);
+}
+
+fetchApps();

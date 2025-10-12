@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -35,6 +35,11 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await initialStartupTasks();
+
+  ipcMain.handle('get-discord-detectable-applications', () => {
+    return detectableApplications || [];
+  });
+
   createWindow();
 });
 
