@@ -33,7 +33,10 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  await initialStartupTasks();
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -58,6 +61,8 @@ app.on('activate', () => {
 import { promises as fs } from 'fs';
 
 const dataFilePath = path.join(__dirname, 'data', 'applications.json');
+
+let detectableApplications: any[] | null = null;
 
 const fetchDiscordDetectableApplications = async () => {
   const url = 'https://discord.com/api/v10/applications/detectable';
@@ -95,5 +100,17 @@ const loadDetectableApplicationsFromFile = async () => {
       console.error('Error reading cached applications file:', error);
     }
     return null;
+  }
+}
+
+async function initialStartupTasks() {
+  detectableApplications = await loadDetectableApplicationsFromFile();
+  if (!detectableApplications) {
+    detectableApplications = await fetchDiscordDetectableApplications();
+    if (detectableApplications) {
+      await saveDetectableApplicationsToFile(detectableApplications);
+    } else {
+      detectableApplications = [];
+    }
   }
 }
