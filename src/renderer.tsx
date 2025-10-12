@@ -34,20 +34,38 @@ console.log(
 
 const fetchApps = async () => {
   const apps = await window.discordAPI.getDetectableApplications();
-  console.log(apps);
-}
+  return apps;
+};
 
-fetchApps();
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import ApplicationSearch from './components/ApplicationSearch';
 
-const App = () => (
-  <div>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-  </div>
-);
+const App = () => {
+  const [apps, setApps] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadApps = async () => {
+      const fetchedApps = await fetchApps();
+      setApps(fetchedApps);
+      setLoading(false);
+    };
+    loadApps();
+  }, []);
+
+  if (loading) {
+    return <div>Loading applications...</div>;
+  }
+
+  return (
+    <>
+      <h1>💖 Hello World!</h1>
+      <p>Welcome to your Electron application.</p>
+      <ApplicationSearch apps={apps} />
+    </>
+  );
+};
 
 const root = createRoot(document.getElementById('root'));
 root.render(<App />);
