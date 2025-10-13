@@ -27,8 +27,8 @@ const App = () => {
 
   return (
     <>
-      <h1>💖 Hello World!</h1>
-      <p>Welcome to your Electron application.</p>
+      <h1>Discord Applications Presence</h1>
+      <p>A tool that makes Discord think you are using an application.</p>
       <ApplicationSearch apps={apps} />
     </>
   );
