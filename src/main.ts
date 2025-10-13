@@ -1,3 +1,4 @@
+import { spawn } from 'child_process';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { promises as fs } from 'fs';
 import path from 'node:path';
@@ -100,5 +101,46 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+  }
+});
+
+ipcMain.on('simulate-app', async (event, appId: string) => {
+  console.log(`Simulate app received for app ID ${appId}`);
+
+  if (!detectableApplications) {
+    console.error('No detectable applications loaded');
+    return;
+  }
+
+  const app = detectableApplications.find((app) => app.id === appId);
+
+  if (!app) {
+    console.error(`App with id ${appId} not found.`);
+    return;
+  }
+
+  const winExecutables = (app.executables || []).filter((exe: any) => exe.os === 'win32');
+
+  if (winExecutables.length === 0) {
+    console.error(`No Windows executables found for app ${app.name}`);
+    return;
+  }
+
+  const exeRelativePath = winExecutables[0].name;
+  const baseExePath = path.join(__dirname, 'executables');
+  const destExePath = path.join(baseExePath, exeRelativePath);
+  const dummyExePath = path.join(baseExePath, 'dummy.exe');
+
+  try {
+    await fs.mkdir(path.dirname(destExePath), { recursive: true });
+    await fs.copyFile(dummyExePath, destExePath);
+
+    console.log(`Copied dummy.exe to ${destExePath}`);
+
+    const child = spawn(destExePath, [], { detached: true, stdio: 'ignore' });
+    child.unref();
+
+  } catch (error) {
+    console.error('Error during simulate-app execution:', error);
   }
 });

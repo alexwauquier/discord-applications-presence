@@ -8,6 +8,11 @@ const ApplicationSearch = ({ apps }: { apps: any[] }) => {
     .sort((a: any, b: any) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
     .slice(0, 10);
 
+  const simulateApp = (appId: string, appName: string) => {
+    window.electronAPI.simulateApp(appId);
+    console.log(`Simulating app ${appName}`);
+  };
+
   return (
     <div>
       <input
@@ -18,7 +23,12 @@ const ApplicationSearch = ({ apps }: { apps: any[] }) => {
       />
       <ul>
         {filteredApps.map((app) => (
-          <li key={app.id}>{app.name}</li>
+          <li key={app.id}>
+            {app.name} 
+            <button onClick={() => simulateApp(app.id, app.name)}>
+              Simulate
+            </button>
+          </li>
         ))}
       </ul>
     </div>
