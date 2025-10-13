@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 const ApplicationSearch = ({ apps }: { apps: any[] }) => {
   const [searchText, setSearchText] = useState('');
 
-  const filteredApps = apps.filter((app: any) =>
-    app.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredApps = apps
+    .filter((app: any) => app.name.toLowerCase().includes(searchText.toLowerCase()))
+    .sort((a: any, b: any) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+    .slice(0, 10);
 
   return (
     <div>
