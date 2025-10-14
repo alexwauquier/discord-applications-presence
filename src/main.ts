@@ -4,7 +4,9 @@ import { promises as fs } from 'fs';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
-const dataFilePath = path.join(__dirname, 'data', 'applications.json');
+const isDev = process.env.NODE_ENV === 'development'
+const resourcesPath = isDev ? path.join(__dirname, 'resources') : process.resourcesPath;
+const dataFilePath = path.join(resourcesPath, 'data', 'applications.json');
 let detectableApplications: any[] | null = null;
 
 if (started) {
@@ -127,9 +129,9 @@ ipcMain.on('simulate-app', async (event, appId: string) => {
   }
 
   const exeRelativePath = winExecutables[0].name;
-  const baseExePath = path.join(__dirname, 'executables');
+  const baseExePath = path.join(resourcesPath, 'executables');
   const destExePath = path.join(baseExePath, exeRelativePath);
-  const dummyExePath = path.join(baseExePath, 'dummy.exe');
+  const dummyExePath = path.join(resourcesPath, 'dummy.exe');
 
   try {
     await fs.mkdir(path.dirname(destExePath), { recursive: true });
