@@ -9,6 +9,21 @@ const resourcesPath = isDev ? path.join(__dirname, 'resources') : process.resour
 const dataFilePath = path.join(resourcesPath, 'data', 'applications.json');
 let detectableApplications: any[] | null = null;
 
+if (isDev) {
+  (async () => {
+    const src = path.join(resourcesPath, '../../../resources/dummy.exe');
+    const dest = path.join(resourcesPath, 'dummy.exe');
+
+    try {
+      await fs.mkdir(resourcesPath, { recursive: true });
+      await fs.copyFile(src, dest);
+      console.log(`dummy.exe successfully copied to ${dest}`);
+    } catch (err) {
+      console.error('Failed to copy dummy.exe:', err);
+    }
+  })();
+}
+
 if (started) {
   app.quit();
 }
@@ -136,8 +151,6 @@ ipcMain.on('simulate-app', async (event, appId: string) => {
   try {
     await fs.mkdir(path.dirname(destExePath), { recursive: true });
     await fs.copyFile(dummyExePath, destExePath);
-
-    console.log(`Copied dummy.exe to ${destExePath}`);
 
     const child = spawn(destExePath, [], { detached: true, stdio: 'ignore' });
     child.unref();
