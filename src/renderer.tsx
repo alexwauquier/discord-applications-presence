@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
-import ApplicationSearch from './components/ApplicationSearch';
-import './index.css';
+import React, { useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+import ApplicationSearch from "./components/ApplicationSearch";
+import "./index.css";
 
 const fetchApps = async () => {
   const apps = await window.discordAPI.getDetectableApplications();
@@ -34,5 +34,5 @@ const App = () => {
   );
 };
 
-const root = createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById("root"));
 root.render(<App />);

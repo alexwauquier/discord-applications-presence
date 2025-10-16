@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer } from "electron";
 
 declare global {
   interface Window {
@@ -7,10 +7,11 @@ declare global {
   }
 }
 
-contextBridge.exposeInMainWorld('discordAPI', {
-  getDetectableApplications: () => ipcRenderer.invoke('get-discord-detectable-applications')
+contextBridge.exposeInMainWorld("discordAPI", {
+  getDetectableApplications: () =>
+    ipcRenderer.invoke("get-discord-detectable-applications")
 });
 
-contextBridge.exposeInMainWorld('electronAPI', {
-  simulateApp: (appId: string) => ipcRenderer.send('simulate-app', appId)
+contextBridge.exposeInMainWorld("electronAPI", {
+  simulateApp: (appId: string) => ipcRenderer.send("simulate-app", appId)
 });
