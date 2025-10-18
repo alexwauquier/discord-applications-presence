@@ -25,5 +25,15 @@
 @layer base {
   body {
     font-family: "DM Sans", "Noto Sans", sans-serif;
+    background-color: var(--color-gray-deep);
+    color: var(--color-white);
   }
+}
+
+@theme {
+  --color-blue: #7289da;
+  --color-gray-medium: #424549;
+  --color-gray-dark: #36393e;
+  --color-gray-darker: #282b30;
+  --color-gray-deep: #1e2124;
 }
