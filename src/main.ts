@@ -146,9 +146,9 @@ ipcMain.on("simulate-app", async (event, appId: string) => {
     return;
   }
 
-  const winExecutables = (app.executables || []).filter(
-    (exe: any) => exe.os === "win32"
-  );
+  const winExecutables = (app.executables || [])
+    .filter((exe: any) => exe.os === "win32")
+    .filter((exe: any) => exe.is_launcher === false);
 
   if (winExecutables.length === 0) {
     console.error(`No Windows executables found for app ${app.name}`);
